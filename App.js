@@ -318,7 +318,7 @@
 // });
 
 import React from 'react';
-import {View, Button, Image} from 'react-native';
+import {View, Button, Image,SafeAreaView} from 'react-native';
 import ImagePicker from 'react-native-image-picker';
 
 class ImagePickerAPI extends React.Component {
@@ -358,10 +358,12 @@ class ImagePickerAPI extends React.Component {
       } else if (response.customButton) {
         console.log('自定义按钮被点击，它的名称是：', response.customButton);
       } else {
-        console.log('Response = ', response); // 选择或拍摄的照片数据对象
-        let source = {uri: response.uri};
+        // console.log('Response = ', response); // 选择或拍摄的照片数据对象
+        // let source = {uri: response.uri};
+
+        
         // You can also display the image using data:
-        // let source = { uri: 'data:image/jpeg;base64,' + response.data };
+        let source = { uri: 'data:image/jpeg;base64,' + response.data };
         this.setState({
           avatarSource: source,
         });
@@ -369,39 +371,20 @@ class ImagePickerAPI extends React.Component {
     });
   };
 
-  onPressVideo = () => {
-    const options = {
-      title: '选择视频',
-      cancelButtonTitle: '取消',
-      takePhotoButtonTitle: '录制视频',
-      chooseFromLibraryButtonTitle: '选择视频',
-      mediaType: 'video',
-      videoQuality: 'medium', // 视频质量 'low', 'medium', or 'high' on iOS, 'low' or 'high' on Android
-    };
-
-    ImagePicker.showImagePicker(options, response => {
-      if (response.didCancel) {
-        console.log('取消');
-      } else if (response.error) {
-        console.log('发生错误: ', response.error);
-      } else if (response.customButton) {
-        console.log('自定义按钮被点击，它的名称是：', response.customButton);
-      } else {
-        console.log('Response = ', response); // 选择或录取的视频数据对象
-        this.setState({
-          videoSource: response.uri,
-        });
-      }
-    });
-  };
-
   _renderImg = () => {
     const side = 200;
-    if (this.state.avatarSource.uri) {
+    if (this.state.avatarSource) {
       return (
         <View>
           <Image
-            source={{uri: this.state.avatarSource.uri}}
+            //localpath
+            // source={{uri: this.state.avatarSource.uri}}
+
+            //base64
+            source={this.state.avatarSource}
+
+            // source = {{uri: `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADMAAAAzCAYAAAA6oTAqAAAAEXRFWHRTb2Z0d2FyZQBwbmdjcnVzaEB1SfMAAABQSURBVGje7dSxCQBACARB+2/ab8BEeQNhFi6WSYzYLYudDQYGBgYGBgYGBgYGBgYGBgZmcvDqYGBgmhivGQYGBgYGBgYGBgYGBgYGBgbmQw+P/eMrC5UTVAAAAABJRU5ErkJggg==`}}
+            
             style={{width: side, height: side}}
           />
         </View>
@@ -413,13 +396,11 @@ class ImagePickerAPI extends React.Component {
 
   render() {
     return (
-      <View>
+      <SafeAreaView>
         <Button title="照片" onPress={this.onPressImg} />
 
-        <Button title="视频" onPress={this.onPressVideo} />
-
         {this._renderImg()}
-      </View>
+      </SafeAreaView>
     );
   }
 }
